@@ -43,6 +43,8 @@ class Util {
 
 	const HEADER_ENCRYPTION_MODULE_KEY = 'oc_encryption_module';
 
+	const ID = 'OC_DEFAULT_MODULE';
+
 	/**
 	 * block size will always be 8192 for a PHP stream
 	 * @see https://bugs.php.net/bug.php?id=21641
@@ -122,7 +124,7 @@ class Util {
 			if (class_exists('\OCA\Encryption\Crypto\Encryption')) {
 				// fall back to default encryption if the user migrated from
 				// ownCloud <= 8.0 with the old encryption
-				$id = \OCA\Encryption\Crypto\Encryption::ID;
+				$id = self::ID;
 			} else {
 				throw new ModuleDoesNotExistsException('Default encryption module missing');
 			}
