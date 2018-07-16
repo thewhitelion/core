@@ -271,6 +271,7 @@ class VerifyChecksumsTest extends TestCase {
 	}
 
 	public function testOnlyFilesOfAGivenUserAreRepaired() {
+
 		/** @var File $file1 */
 		$file1 = $this->testFiles[0]['file'];
 		/** @var File $file2 */
