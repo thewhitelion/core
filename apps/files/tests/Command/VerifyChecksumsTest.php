@@ -324,8 +324,6 @@ class VerifyChecksumsTest extends TestCase {
 			['path' => '/does/not/exist', 'name' => 'x-file.txt']
 		);
 
-		$this->refreshFileInfo($file);
-
 		$this->cmd->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 		$output = $this->cmd->getDisplay();
 
