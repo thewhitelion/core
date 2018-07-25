@@ -880,14 +880,6 @@ class Share20OCS {
 			return new \OC\OCS\Result(null, 404, $this->l->t('Wrong share ID, share doesn\'t exist'));
 		}
 
-		if ($share->getState() === $state) {
-			if ($eventName !== '') {
-				$this->eventDispatcher->dispatch('share.after' . $eventName, new GenericEvent(null, ['share' => $share]));
-			}
-			// if there are no changes in the state, just return the share as if the change was successful
-			return new \OC\OCS\Result([$this->formatShare($share, true)]);
-		}
-
 		$node = $share->getNode();
 		$node->lock(\OCP\Lock\ILockingProvider::LOCK_SHARED);
 
@@ -902,6 +894,15 @@ class Share20OCS {
 			$share->getSharedBy() === $this->currentUser->getUID()) {
 			$node->unlock(ILockingProvider::LOCK_SHARED);
 			return new \OC\OCS\Result(null, 403, $this->l->t('Only recipient can change accepted state'));
+		}
+
+		if ($share->getState() === $state) {
+			if ($eventName !== '') {
+				$this->eventDispatcher->dispatch('share.after' . $eventName, new GenericEvent(null, ['share' => $share]));
+			}
+			// if there are no changes in the state, just return the share as if the change was successful
+			$node->unlock(\OCP\Lock\ILockingProvider::LOCK_SHARED);
+			return new \OC\OCS\Result([$this->formatShare($share, true)]);
 		}
 
 		// we actually want to update all shares related to the node in case there are multiple
