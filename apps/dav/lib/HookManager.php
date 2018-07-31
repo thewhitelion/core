@@ -27,7 +27,6 @@ use OCA\DAV\CardDAV\CardDavBackend;
 use OCA\DAV\CardDAV\SyncService;
 use OCP\IL10N;
 use OCP\IUser;
-use OCP\IUserSession;
 use OCP\IUserManager;
 use OCP\Util;
 use OC\Files\View;
@@ -57,21 +56,17 @@ class HookManager {
 
 	/** @var array */
 	private $addressBooksToDelete;
-	/** @var IUserSession */
-	private $userSession;
 
 	public function __construct(IUserManager $userManager,
 								SyncService $syncService,
 								CalDavBackend $calDav,
 								CardDavBackend $cardDav,
-								IL10N $l10n,
-								IUserSession $userSession) {
+								IL10N $l10n) {
 		$this->userManager = $userManager;
 		$this->syncService = $syncService;
 		$this->calDav = $calDav;
 		$this->cardDav = $cardDav;
 		$this->l10n = $l10n;
-		$this->userSession = $userSession;
 	}
 
 	public function setup() {
@@ -169,7 +164,10 @@ class HookManager {
 	}
 
 	public function deleteZsyncMetadata($params) {
-		$view = new View('/' . $this->userSession->getUser()->getUID());
+		if (\OC::$server->getUserSession() === null || \OC::$server->getUserSession()->getUser() === null) {
+			return;
+		}
+		$view = new View('/' . \OC::$server->getUserSession()->getUser()->getUID());
 		$path = $params[\OC\Files\Filesystem::signal_param_path];
 		$path = 'files/' . \ltrim($path, '/');
 
@@ -200,7 +198,10 @@ class HookManager {
 	}
 
 	public function copyZsyncMetadata($params) {
-		$view = new View('/' . $this->userSession->getUser()->getUID());
+		if (\OC::$server->getUserSession() === null || \OC::$server->getUserSession()->getUser() === null) {
+			return;
+		}
+		$view = new View('/' . \OC::$server->getUserSession()->getUser()->getUID());
 		$from = $params[\OC\Files\Filesystem::signal_param_oldpath];
 		$from = 'files/' . \ltrim($from, '/');
 		$to = $params[\OC\Files\Filesystem::signal_param_newpath];

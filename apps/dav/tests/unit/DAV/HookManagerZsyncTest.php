@@ -112,7 +112,7 @@ class HookManagerZsyncTest extends TestCase {
 		$user = $this->createMock(IUser::class);
 		$user->method('getUID')->willReturn(self::TEST_ZSYNC_HOOKS_USER);
 
-		$hm = new HookManager($userManager, $syncService, $cal, $card, $l10n, \OC::$server->getUserSession());
+		$hm = new HookManager($userManager, $syncService, $cal, $card, $l10n);
 		$hm->setup();
 
 		self::loginHelper(self::TEST_ZSYNC_HOOKS_USER);

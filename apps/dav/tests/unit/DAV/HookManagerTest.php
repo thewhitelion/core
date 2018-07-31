@@ -39,9 +39,6 @@ class HookManagerTest extends TestCase {
 	/** @var L10N */
 	private $l10n;
 
-	/** @var IUserSession */
-	private $userSession;
-
 	public function setUp() {
 		parent::setUp();
 
@@ -53,8 +50,6 @@ class HookManagerTest extends TestCase {
 			->will($this->returnCallback(function ($text, $parameters = []) {
 				return \vsprintf($text, $parameters);
 			}));
-
-		$this->userSession = $this->createMock(IUserSession::class);
 	}
 
 	public function test() {
@@ -95,7 +90,7 @@ class HookManagerTest extends TestCase {
 			'principals/users/newUser',
 			'contacts', ['{DAV:}displayname' => $this->l10n->t('Contacts')]);
 
-		$hm = new HookManager($userManager, $syncService, $cal, $card, $this->l10n, $this->userSession);
+		$hm = new HookManager($userManager, $syncService, $cal, $card, $this->l10n);
 		$hm->firstLogin($user);
 	}
 
@@ -133,7 +128,7 @@ class HookManagerTest extends TestCase {
 		]);
 		$card->expects($this->never())->method('createAddressBook');
 
-		$hm = new HookManager($userManager, $syncService, $cal, $card, $this->l10n, $this->userSession);
+		$hm = new HookManager($userManager, $syncService, $cal, $card, $this->l10n);
 		$hm->firstLogin($user);
 	}
 
@@ -177,7 +172,7 @@ class HookManagerTest extends TestCase {
 			'principals/users/newUser',
 			'contacts', ['{DAV:}displayname' => $this->l10n->t('Contacts')]);
 
-		$hm = new HookManager($userManager, $syncService, $cal, $card, $this->l10n, $this->userSession);
+		$hm = new HookManager($userManager, $syncService, $cal, $card, $this->l10n);
 		$hm->firstLogin($user);
 	}
 
@@ -218,7 +213,7 @@ class HookManagerTest extends TestCase {
 		]);
 		$card->expects($this->once())->method('deleteAddressBook')->with('personal');
 
-		$hm = new HookManager($userManager, $syncService, $cal, $card, $this->l10n, $this->userSession);
+		$hm = new HookManager($userManager, $syncService, $cal, $card, $this->l10n);
 		$hm->preDeleteUser(['uid' => 'newUser']);
 		$hm->postDeleteUser(['uid' => 'newUser']);
 	}
