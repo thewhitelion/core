@@ -17,7 +17,8 @@
             "OC\\Settings\\": "settings/",
             "OCP\\": "lib/public"
         },
-        "classmap": ["lib/private/legacy"]
+        "classmap": ["lib/private/legacy"],
+        "files": ["tests/lib/TestCase.php"]
     },
     "require-dev": {
         "behat/behat": "^3.0",
